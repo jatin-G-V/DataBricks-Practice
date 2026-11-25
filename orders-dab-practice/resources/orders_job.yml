@@ -1,0 +1,22 @@
+
+resources:
+  jobs:
+    orders_pipeline_dab:
+      name: orders_pipeline_dab
+
+      tasks:
+        - task_key: ingest_bronze
+          notebook_task:
+            notebook_path: ../src/01_bronze.ipynb
+
+        - task_key: clean_silver
+          depends_on:
+            - task_key: ingest_bronze
+          notebook_task:
+            notebook_path: ../src/02_silver.ipynb
+
+        - task_key: aggregate_gold
+          depends_on:
+            - task_key: clean_silver
+          notebook_task:
+            notebook_path: ../src/03_gold.ipynb
